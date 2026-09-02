@@ -1,0 +1,227 @@
+Min & Max Heap Program using C
+
+#include <stdio.h>
+
+#define MAX 100
+
+int heap[MAX];
+int size = 0;
+int isMinHeap;
+
+/* Swap two elements */
+void swap(int *a, int *b)
+{
+    int temp = *a;
+    *a = *b;
+    *b = temp;
+}
+
+/* Insert into Min Heap */
+void minHeapInsert(int value)
+{
+    int i;
+
+    if (size == MAX)
+    {
+        printf("Heap is full!\n");
+        return;
+    }
+
+    i = size;
+    heap[size++] = value;
+
+    while (i > 0 && heap[(i - 1) / 2] > heap[i])
+    {
+        swap(&heap[i], &heap[(i - 1) / 2]);
+        i = (i - 1) / 2;
+    }
+
+    printf("%d inserted successfully.\n", value);
+}
+
+/* Insert into Max Heap */
+void maxHeapInsert(int value)
+{
+    int i;
+
+    if (size == MAX)
+    {
+        printf("Heap is full!\n");
+        return;
+    }
+
+    i = size;
+    heap[size++] = value;
+
+    while (i > 0 && heap[(i - 1) / 2] < heap[i])
+    {
+        swap(&heap[i], &heap[(i - 1) / 2]);
+        i = (i - 1) / 2;
+    }
+
+    printf("%d inserted successfully.\n", value);
+}
+
+/* Delete root from Min Heap */
+void minHeapDelete()
+{
+    int i, left, right, smallest;
+
+    if (size == 0)
+    {
+        printf("Heap is empty!\n");
+        return;
+    }
+
+    printf("Deleted element: %d\n", heap[0]);
+
+    heap[0] = heap[size - 1];
+    size--;
+
+    i = 0;
+
+    while (1)
+    {
+        left = 2 * i + 1;
+        right = 2 * i + 2;
+        smallest = i;
+
+        if (left < size && heap[left] < heap[smallest])
+            smallest = left;
+
+        if (right < size && heap[right] < heap[smallest])
+            smallest = right;
+
+        if (smallest == i)
+            break;
+
+        swap(&heap[i], &heap[smallest]);
+        i = smallest;
+    }
+}
+
+/* Delete root from Max Heap */
+void maxHeapDelete()
+{
+    int i, left, right, largest;
+
+    if (size == 0)
+    {
+        printf("Heap is empty!\n");
+        return;
+    }
+
+    printf("Deleted element: %d\n", heap[0]);
+
+    heap[0] = heap[size - 1];
+    size--;
+
+    i = 0;
+
+    while (1)
+    {
+        left = 2 * i + 1;
+        right = 2 * i + 2;
+        largest = i;
+
+        if (left < size && heap[left] > heap[largest])
+            largest = left;
+
+        if (right < size && heap[right] > heap[largest])
+            largest = right;
+
+        if (largest == i)
+            break;
+
+        swap(&heap[i], &heap[largest]);
+        i = largest;
+    }
+}
+
+/* Display Heap */
+void display()
+{
+    int i;
+
+    if (size == 0)
+    {
+        printf("Heap is empty!\n");
+        return;
+    }
+
+    printf("Heap elements: ");
+
+    for (i = 0; i < size; i++)
+        printf("%d ", heap[i]);
+
+    printf("\n");
+}
+
+int main()
+{
+    int heapChoice, choice, value;
+
+    printf("===== HEAP IMPLEMENTATION =====\n");
+    printf("1. Min Heap\n");
+    printf("2. Max Heap\n");
+    printf("Enter your choice: ");
+    scanf("%d", &heapChoice);
+
+    if (heapChoice == 1)
+        isMinHeap = 1;
+    else if (heapChoice == 2)
+        isMinHeap = 0;
+    else
+    {
+        printf("Invalid heap choice!\n");
+        return 0;
+    }
+
+    do
+    {
+        printf("\n===== MENU =====\n");
+        printf("1. Insert\n");
+        printf("2. Delete Root\n");
+        printf("3. Display\n");
+        printf("4. Exit\n");
+        printf("Enter your choice: ");
+        scanf("%d", &choice);
+
+        switch (choice)
+        {
+            case 1:
+                printf("Enter value: ");
+                scanf("%d", &value);
+
+                if (isMinHeap)
+                    minHeapInsert(value);
+                else
+                    maxHeapInsert(value);
+
+                break;
+
+            case 2:
+                if (isMinHeap)
+                    minHeapDelete();
+                else
+                    maxHeapDelete();
+
+                break;
+
+            case 3:
+                display();
+                break;
+
+            case 4:
+                printf("Program terminated.\n");
+                break;
+
+            default:
+                printf("Invalid choice!\n");
+        }
+
+    } while (choice != 4);
+
+    return 0;
+}
+
